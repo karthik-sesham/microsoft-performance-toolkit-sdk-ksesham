@@ -1,4 +1,4 @@
-# Abstract
+﻿# Abstract
 
 This document outlines using the `Engine` to programmatically process data.
 
@@ -121,25 +121,11 @@ using (var dataSources = DataSourceSet.Create(plugins))
 }
 ````
 
-If you would like to enable a composite cooker, call the `GetCookedData(DataCookerPath)`
-method after process is called so that the results are obtained properly.
-
-````cs
-using (var plugins = PluginSet.Load())
-using (var dataSources = DataSourceSet.Create(plugins))
-{
-    dataSources.Add(new FileDataSource("myfile.txt"));
-
-    var createInfo = new EngineCreateInfo(dataSources.AsReadOnly());
-    using (var engine = Engine.Create(createInfo))
-    {
-        engine.EnableCooker(CompCookerPath);
-
-        var results = engine.Process();
-        results.GetCookedData(CompCookerPath);
-    }
-}
-````
+> ⚠️ Note: [Composite cookers](../Glossary.md#compositedatacooker) are processed 
+lazily. The above code will not cause any code inside of an enabled composite cooker
+to execute. To execute/debug composite cookers, you must also have code that queries
+for the specific cooker, such as building a table that uses the cooker or manually calling 
+`results.GetCookedData(CompCookerPath)` after processing.
 
 # Reusing the DataSourceSet - Coming Soon
 
